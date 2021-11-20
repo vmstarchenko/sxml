@@ -1,0 +1,26 @@
+$chain:
+  - $apply: html.loads
+  - $apply: sxml.find
+    attrs:
+      - name: name
+        query: '#pip-command'
+        $chain:
+          - $apply: html.dumps
+          - $apply: re.match
+            pattern: pip install (.*)
+            group: 1
+      - name: released
+        query: .package-header__date time
+        $chain:
+          - $apply: html.get_attr
+            name: datetime
+          - $apply: datetime.parse
+      - name: short_description
+        query: .package-description__summary
+        $apply: html.dumps
+      - name: license
+        query: .sidebar-section p:contains('License')
+        $chain:
+          - $apply: html.remove
+            query: strong
+          - $apply: html.dumps

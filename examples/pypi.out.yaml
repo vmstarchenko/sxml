@@ -1,0 +1,4 @@
+license: BSD License (BSD)
+name: lxml
+released: 2021-11-02 18:50:51+00:00
+short_description: Powerful and Pythonic XML processing library combining libxml2/libxslt with the ElementTree API.

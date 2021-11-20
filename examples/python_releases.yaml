@@ -1,0 +1,39 @@
+$chain:
+  - $apply: hub
+    merge: true
+    html:
+      - $apply: html.loads
+        url: !Opt url
+      - $apply: sxml.find
+        attrs:
+          - name: stable_releases
+            query: css|.column:contains('Stable Releases')
+            attrs:
+              - name: versions
+                query: xpath|./ul/li/a
+                many: true
+                attrs:
+                  - name: link
+                    $chain:
+                      - $apply: html.get_attr
+                        name: href
+                  - name: version
+                    $chain:
+                      - $apply: html.dumps
+                      - $apply: re.match
+                        pattern: Python ([\d.]+)
+                        group: 1
+                  - name: release_date
+                    $chain:
+                      - $apply: html.dumps
+                      - $apply: re.search
+                        pattern: ' - (.+)'
+                        group: 1
+                      - $apply: datetime.parse
+    metadata:
+      - $apply: html.extract_metadata
+        formats: ['opengraph']
+      - $apply: sxml.find
+        attrs:
+          - name: title
+            query: 'jpath|$.."og:title"'

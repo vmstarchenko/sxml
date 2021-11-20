@@ -1,0 +1,46 @@
+$chain:
+  - $apply: html.loads
+  - $apply: sxml.find
+    attrs:
+      - name: content
+        query: .form
+        $chain:
+          - $apply: html.remove
+            query:
+              - form
+              - 'xpath|.//a[contains(@class, "pos")]/preceding-sibling::*'
+              - 'xpath|.//a[contains(@class, "pos")]'
+          - $apply: html.split
+            query: h3
+            as_list: true
+          - $map: sxml.find
+            attrs:
+              - name: part_of_speech
+                query: h3
+                $chain:
+                  - $apply: html.dumps
+              - name: variant
+                query: ul > li
+                many: true
+                attrs:
+                  - name: other
+                    query: a
+                    many: true
+                    $chain:
+                      - $map: html.dumps
+                  - name: examples
+                    query: i
+                    $chain:
+                      - $apply: html.dumps
+                      - $apply: re.split
+                        pattern: '; '
+                  - name: definition
+                    $chain:
+                      - $apply: html.remove
+                        query:
+                          - 'xpath|.//a/preceding-sibling::*'
+                          - 'xpath|.//a'
+                          - 'xpath|.//i/following-sibling::*'
+                          - 'xpath|.//i'
+                      - $apply: html.dumps
+

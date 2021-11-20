@@ -1,0 +1,48 @@
+content:
+-   part_of_speech: null
+    variant: []
+-   part_of_speech: Noun
+    variant:
+    -   definition: royal (a sail set next above the topgallant on a royal mast)
+        examples:
+        - ''
+        other: []
+    -   definition: ', (stag with antlers of 12 or more branches)'
+        examples:
+        - ''
+        other:
+        - royal stag
+-   part_of_speech: Adjective
+    variant:
+    -   definition: royal (of or relating to or indicative of or issued or performed by a king or queen or other monarch)
+        examples:
+        - '"the royal party"'
+        - '"the royal crest"'
+        - '"by royal decree"'
+        - '"a royal visit"'
+        other: []
+    -   definition: royal (established or chartered or authorized by royalty)
+        examples:
+        - '"the Royal Society"'
+        other: []
+    -   definition: royal (being of the rank of a monarch)
+        examples:
+        - '"of royal ancestry"'
+        - '"princes of the blood royal"'
+        other: []
+    -   definition: ', , , , royal (belonging to or befitting a supreme ruler)'
+        examples:
+        - '"golden age of imperial splendor"'
+        - '"purple tyrant"'
+        - '"regal attire"'
+        - '"treated with royal acclaim"'
+        - '"the royal carriage of a stag''s head"'
+        other:
+        - imperial
+        - majestic
+        - purple
+        - regal
+    -   definition: royal (invested with royal power as symbolized by a crown)
+        examples:
+        - '"the royal (or crowned) heads of Europe"'
+        other: []

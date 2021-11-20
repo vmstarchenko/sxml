@@ -1,0 +1,7 @@
+[report]
+exclude_lines =
+	  pass
+
+[run]
+omit =
+    sxml/__main__.py
