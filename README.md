@@ -6,6 +6,7 @@
 для примеров использования см tests
 
 # TODO:
+* add throttler
 * add method breakpoint
 * add method date.parse
 * add method file.read

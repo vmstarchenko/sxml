@@ -248,8 +248,6 @@ def test_split():
     }
 
 
-
-
     parse = sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
         $chain:
           - $apply: html.loads

@@ -1,6 +1,7 @@
 import typing
 from typing import Any, Union, Optional
 import subprocess as sp
+import copy
 
 from lxml import html as htree
 from bs4 import BeautifulSoup    # type: ignore
@@ -156,10 +157,11 @@ class Find:
 
         self.attrs = []
         for attr in attrs:
-            many = attr.get('many', False)
+            attr = copy.copy(attr)
+            many = attr.pop('many', False)
             chain = self.namespace['$chain'].from_options(attr, self.namespace)
 
-            sub_attrs = attr.get('attrs')
+            sub_attrs = attr.pop('attrs', None)
             if sub_attrs:
                 if not chain:
                     chain = self.namespace['$chain']([], self.namespace)
@@ -171,11 +173,14 @@ class Find:
 
             self.attrs.append({
                 'many': many,
-                'name': attr['name'],
-                'required': attr.get('required', False),
-                'query': Query(attr.get('query')),
+                'name': attr.pop('name'),
+                'required': attr.pop('required', False),
+                'query': Query(attr.pop('query', None)),
                 'chain': chain,
             })
+
+            if attr:
+                raise ValueError(f'unkonwn options for attr {attr}')
 
     def __call__(self, data: htree.Element, *, options) -> dict[str, Any]:
         return {
