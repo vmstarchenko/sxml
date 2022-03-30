@@ -197,6 +197,7 @@ def test_split():
                   - $apply: html.split
                     query: h1,h2
                     as_list: true
+                    drop_first: 0
                   - $map: html.dumps
     '''))
     assert parse(html, options={'url': 'http://localhost'}) == {
@@ -216,6 +217,50 @@ def test_split():
                 $chain:
                   - $apply: html.split
                     query: h1,h2
+                    as_list: true
+                  - $map: html.dumps
+    '''))
+    assert parse(html, options={'url': 'http://localhost'}) == {
+        'content': [
+            'title2 content1 text'
+        ]
+    }
+
+    parse = sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
+        $chain:
+          - $apply: html.loads
+          - $apply: sxml.find
+            attrs:
+              - name: content
+                query: div
+                $chain:
+                  - $apply: html.split
+                    query: h1,h2
+                    as_list: true
+                    drop_first: 0
+                    drop_last: 1
+                  - $map: html.dumps
+    '''))
+    assert parse(html, options={'url': 'http://localhost'}) == {
+        'content': [
+            'title1 content1 text'
+        ]
+    }
+
+
+
+
+    parse = sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
+        $chain:
+          - $apply: html.loads
+          - $apply: sxml.find
+            attrs:
+              - name: content
+                query: div
+                $chain:
+                  - $apply: html.split
+                    query: h1,h2
+                    drop_first: 0
                   - $apply: html.dumps
                     raw: true
     '''))

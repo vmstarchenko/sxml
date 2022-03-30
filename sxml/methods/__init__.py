@@ -2,13 +2,14 @@ import re
 import json
 from typing import Any, Union, Optional
 import datetime
-import dateparser
 from lxml import etree
 import copy
 
-from sxml.utils import wrap_global
+from sxml.utils import wrap_global, lazy_import
 
 from . import html
+
+dateparser = lazy_import("dateparser")
 
 
 class ReFindall:
@@ -25,6 +26,15 @@ class ReSplit:
 
     def __call__(self, data, *, options):
         return self.regex.split(data)
+
+
+class ReSub:
+    def __init__(self, *, pattern, repl, namespace):
+        self.regex = re.compile(pattern)
+        self.repl = repl
+
+    def __call__(self, data, *, options):
+        return self.regex.sub(self.repl, data)
 
 
 class ReMatch:
@@ -136,6 +146,7 @@ SXML_BUILTINS: dict[str, Any] = {
     'json.loads': wrap_global(json_loads),
     're.findall': ReFindall,
     're.split': ReSplit,
+    're.sub': ReSub,
     're.match': ReMatch,
     're.search': ReSearch,
     'datetime.strftime': wrap_global(datetime_strftime),

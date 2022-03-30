@@ -1,3 +1,4 @@
+import typing
 from typing import Any, Union, Optional
 import subprocess as sp
 
@@ -12,7 +13,7 @@ from sxml.utils import clean_spaces
 FORMAT_JS_CMD = ['clang-format']
 
 
-def format_js(script: str):
+def format_js(script: str) -> str:
     proc = sp.Popen(FORMAT_JS_CMD, stdin=sp.PIPE, stdout=sp.PIPE)
     out, err = proc.communicate(script.encode('utf8'))
     proc.kill()
@@ -21,6 +22,7 @@ def format_js(script: str):
     return f'\n{out.decode("utf8").strip()}\n'
 
 
+@typing.no_type_check
 def prettify_scripts(html: str) -> str:
     parser = htree.HTMLParser()
     tree = htree.fromstring(html, parser=parser)
@@ -39,6 +41,7 @@ def prettify(html: Optional[str]) -> Optional[str]:
     return prettify_html(prettify_scripts(html))
 
 
+@typing.no_type_check
 def html_loads(data, *, url=None) -> htree.Element:
     tree = htree.fromstring(data)
     base_urls = tree.xpath('.//base/@href')
@@ -108,10 +111,12 @@ class Remove:
 
 
 class Split:
-    def __init__(self, query, namespace, *, as_list=False):
+    def __init__(self, query, namespace, *, as_list=False, drop_first=1, drop_last=0):
         self.namespace = namespace
         self.query = Query(query)
         self.as_list = as_list
+        self.drop_first = drop_first
+        self.drop_last = drop_last
 
     def __call__(self, data, *, options):
         nodes = set(self.query.apply(data))
@@ -131,6 +136,11 @@ class Split:
 
         if (cur_node.text and cur_node.text.strip()) or list(cur_node):
             res.append(cur_node)
+
+        if self.drop_first:
+            res = res[self.drop_first:]
+        if res and self.drop_last:
+            res = res[:-self.drop_last]
 
         if self.as_list:
             return res

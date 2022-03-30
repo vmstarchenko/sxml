@@ -86,7 +86,7 @@ class Query:
         elts = []
         for q in self._query:
             for elt in q.apply(root):
-                if isinstance(elt, collections.Hashable):
+                if isinstance(elt, collections.abc.Hashable):
                     if elt not in used_elts:
                         elts.append(elt)
                         used_elts.add(elt)
