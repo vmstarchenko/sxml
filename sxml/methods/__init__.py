@@ -156,4 +156,5 @@ SXML_BUILTINS: dict[str, Any] = {
     'copy.deepcopy': wrap_global(copy_deepcopy),
     'tee': wrap_global(tee),
     'hub': Hub,
+    'int': wrap_global(int)
 }

@@ -2,9 +2,8 @@ from typing import Any
 from pathlib import Path
 from abc import abstractmethod, ABC
 
-from . import yaml_helpers
-
-from .methods import SXML_BUILTINS
+from sxml import yaml_helpers
+from sxml.methods import SXML_BUILTINS
 
 Namespace = dict[str, Any]
 Config = Any
