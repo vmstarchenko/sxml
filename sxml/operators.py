@@ -3,7 +3,7 @@ from pathlib import Path
 from abc import abstractmethod, ABC
 
 from sxml import yaml_helpers
-from sxml.methods import SXML_BUILTINS
+from .methods import SXML_BUILTINS
 
 Namespace = dict[str, Any]
 Config = Any
