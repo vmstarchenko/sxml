@@ -214,10 +214,14 @@ class Find:
 
 
 # https://github.com/scrapinghub/extruct
+
+EXTRUCT_SYNTAXES = ['microdata', 'opengraph', 'json-ld', 'microformat', 'rdfa', 'dublincore']
+
+
 def extract_metadata(
     data, *,
     url: Optional[str] = None,
-    formats: Optional[list[str]] = extruct.SYNTAXES,
+    formats: Optional[list[str]] = EXTRUCT_SYNTAXES,
 ) -> dict[str, Any]:
     metadata = extruct.extract(data, base_url=url, syntaxes=formats, uniform=True)
     metadata = {

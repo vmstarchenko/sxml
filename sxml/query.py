@@ -1,10 +1,14 @@
 from typing import Callable, Optional, Union
 from abc import abstractmethod, ABC
 import collections
+import json
 
 from lxml import cssselect
-import jsonpath_ng  # type: ignore
-import json
+
+from sxml.utils import lazy_import
+
+
+jsonpath_ng = lazy_import("jsonpath_ng")
 
 
 _CSS_TRANSLATOR = cssselect.LxmlHTMLTranslator()

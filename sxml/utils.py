@@ -31,6 +31,9 @@ def wrap_global(func):
 # https://docs.python.org/3/library/importlib.html#implementing-lazy-imports
 def lazy_import(name):
     spec = importlib.util.find_spec(name)
+    if spec is None:
+        return None
+
     loader = importlib.util.LazyLoader(spec.loader)
     spec.loader = loader
     module = importlib.util.module_from_spec(spec)
