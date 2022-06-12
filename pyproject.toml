@@ -59,7 +59,7 @@ requires = ["setuptools>=42.0", "wheel"]
 
 [tool.setuptools.packages.find]
 # where = ["src"]  # ["."] by default
-include = ["sxml"]  # ["*"] by default
+include = ["sxml*"]  # ["*"] by default
 # exclude = ["mypackage.tests*"]  # empty 
 
 
