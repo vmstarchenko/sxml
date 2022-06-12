@@ -1,0 +1,77 @@
+[project]
+name = "sxml"
+version = "0.1.6"
+description = "Simple lxml pipeline"
+keywords = ['lxml']
+classifiers = [
+   "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+    "PyYAML",
+    "lxml",
+    "cssselect",
+]
+
+[project.optional-dependencies]
+extras = [
+    "jsonpath-ng",
+    "dateparser",
+    "beautifulsoup4",
+    "extruct",
+]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-timeout",
+    "pytest-mypy",
+    "coverage",
+    "flake8",
+    "coveralls",
+    "codecov",
+    "types-PyYAML",
+    "types-dateparser",
+    "lxml-stubs",
+    "freezegun",
+    "types-freezegun",
+]
+
+[project.urls]
+Homepage="https://github.com/vmstarchenko/sxml"
+
+
+[build-system]
+requires = ["setuptools>=42.0", "wheel"]
+
+# [options]
+# packages=sxml
+# zip_safe=true
+# include_package_data=True
+
+# [options.entry_points]
+# console_scripts =
+#     sxml = sxml.__main__:main
+
+[tool.setuptools.packages.find]
+# where = ["src"]  # ["."] by default
+include = ["sxml"]  # ["*"] by default
+# exclude = ["mypackage.tests*"]  # empty 
+
+
+[tool.coverage.run]
+branch = true
+include = "sxml/*"
+omit= [
+    "sxml/__main__.py"
+]
+relative_files = true
+
+[tool.coverage.report]
+show_missing = true

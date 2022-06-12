@@ -4,11 +4,13 @@ import subprocess as sp
 import copy
 
 from lxml import html as htree
-from bs4 import BeautifulSoup    # type: ignore
-import extruct    # type: ignore
+from sxml.utils import lazy_import
 
 from sxml.query import Query
 from sxml.utils import clean_spaces
+
+bs4 = lazy_import("bs4")
+extruct = lazy_import("extruct")
 
 
 FORMAT_JS_CMD = ['clang-format']
@@ -33,7 +35,7 @@ def prettify_scripts(html: str) -> str:
 
 
 def prettify_html(html: str) -> str:
-    return next(BeautifulSoup(html, 'lxml').body.children).prettify()
+    return next(bs4.BeautifulSoup(html, 'lxml').body.children).prettify()
 
 
 def prettify(html: Optional[str]) -> Optional[str]:
