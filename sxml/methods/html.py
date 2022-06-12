@@ -1,5 +1,5 @@
 import typing
-from typing import Any, Union, Optional
+from typing import Any, Union, Optional, Iterable
 import subprocess as sp
 import copy
 
@@ -17,11 +17,11 @@ FORMAT_JS_CMD = ['clang-format']
 
 
 def format_js(script: str) -> str:
-    proc = sp.Popen(FORMAT_JS_CMD, stdin=sp.PIPE, stdout=sp.PIPE)
-    out, err = proc.communicate(script.encode('utf8'))
-    proc.kill()
-    if proc.returncode:
-        return script
+    with sp.Popen(FORMAT_JS_CMD, stdin=sp.PIPE, stdout=sp.PIPE) as proc:
+        out, _err = proc.communicate(script.encode('utf8'))
+        proc.kill()
+        if proc.returncode:
+            return script
     return f'\n{out.decode("utf8").strip()}\n'
 
 
@@ -61,9 +61,9 @@ def html_dumps(
     if pretty and (clean or raw is False):
         raise ValueError
     if raw is None:
-        raw = True if pretty else False
+        raw = bool(pretty)
     if clean is None:
-        clean = False if raw else True
+        clean = not raw
 
     if data is None:
         return None
@@ -95,7 +95,7 @@ class Remove:
         for query in self.query:
             for node in query.apply(data):
                 if not self.remove_node(node):
-                    return
+                    return None
         return data
 
     @staticmethod
@@ -208,22 +208,21 @@ class Find:
             res = chain(res, options=options)
 
         if res is None and attr['required']:
-            raise
+            raise AttributeError(f'attribute {attr["name"]} is required')
 
         return res
 
 
 # https://github.com/scrapinghub/extruct
-
-EXTRUCT_SYNTAXES = ['microdata', 'opengraph', 'json-ld', 'microformat', 'rdfa', 'dublincore']
+EXTRUCT_SYNTAXES = ('microdata', 'opengraph', 'json-ld', 'microformat', 'rdfa', 'dublincore')
 
 
 def extract_metadata(
     data, *,
     url: Optional[str] = None,
-    formats: Optional[list[str]] = EXTRUCT_SYNTAXES,
+    formats: Iterable[str] = EXTRUCT_SYNTAXES,
 ) -> dict[str, Any]:
-    metadata = extruct.extract(data, base_url=url, syntaxes=formats, uniform=True)
+    metadata = extruct.extract(data, base_url=url, syntaxes=list(formats), uniform=True)
     metadata = {
         key: value
         for key, value in metadata.items()

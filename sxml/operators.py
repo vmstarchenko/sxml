@@ -10,7 +10,6 @@ Config = Any
 
 
 class Operator(ABC):
-    @abstractmethod
     def __init__(self, config: Config, namespace: Namespace) -> None:
         pass
 
@@ -21,6 +20,7 @@ class Operator(ABC):
 
 class Chain(Operator):
     def __init__(self, config: Config, namespace: Namespace) -> None:
+        super().__init__(config, namespace)
         self.namespace = namespace
 
         self._chain: list[Operator] = []
@@ -58,6 +58,7 @@ class Chain(Operator):
 
 class Apply(Operator):
     def __init__(self, config: Config, namespace: Namespace) -> None:
+        super().__init__(config, namespace)
         self.namespace = namespace
         name = config.pop('$apply')
         self.func = self.namespace[name](namespace=self.namespace, **config)
@@ -68,6 +69,7 @@ class Apply(Operator):
 
 class Map(Operator):
     def __init__(self, config: Config, namespace: Namespace) -> None:
+        super().__init__(config, namespace)
         self.namespace = namespace
         name = config.pop('$map')
         self.func = self.namespace[name](namespace=self.namespace, **config)
@@ -87,8 +89,8 @@ class HtmlPipeline(Chain):
         return super().__call__(data, options=options or {})
 
     @classmethod
-    def from_file(cls, path: str) -> 'HtmlPipeline':
-        return cls.from_string(Path(path).read_text())
+    def from_file(cls, path: str, *args, **kwargs) -> 'HtmlPipeline':
+        return cls.from_string(Path(path).read_text(*args, **kwargs))
 
     @classmethod
     def from_string(cls, config: str) -> 'HtmlPipeline':

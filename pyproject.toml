@@ -28,18 +28,16 @@ extras = [
     "extruct",
 ]
 test = [
+    "freezegun",
+    "lxml-stubs",
     "pytest",
     "pytest-cov",
-    "pytest-timeout",
     "pytest-mypy",
-    "coverage",
-    "flake8",
-    "coveralls",
-    "codecov",
+    "pytest-pylint",
+    "pytest-flake8",
+    "pytest-timeout",
     "types-PyYAML",
     "types-dateparser",
-    "lxml-stubs",
-    "freezegun",
     "types-freezegun",
 ]
 
@@ -75,3 +73,32 @@ relative_files = true
 
 [tool.coverage.report]
 show_missing = true
+
+[tool.pytest]
+flake8-ignore = [
+    "tests/*",
+]
+flake8-max-line-length = 99
+
+[tool.pytest.ini_options]
+# addopts = "-ra -q"
+filterwarnings = [
+    "ignore::DeprecationWarning:pytest_pylint*",
+    "ignore::DeprecationWarning:pylint*",
+    "ignore::DeprecationWarning:pyRdfa*",
+    "ignore::DeprecationWarning:flake8*",
+]
+addopts = [
+    "--flake8",
+    "--pylint",
+    "--mypy",
+    # "-n", "4",
+    "-vv",
+    "--cov=sxml", "--cov-report=xml", "--no-cov-on-fail",
+    # "-k", "test_name",
+    # "-r", "A",
+]
+testpaths = [
+    "tests",
+    "sxml",
+]

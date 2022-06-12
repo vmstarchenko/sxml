@@ -16,7 +16,7 @@ def patch_options(options, kwargs):
 
 
 def wrap_global(func):
-    class keep_args_instance:
+    class KeepArgsCls:
         def __init__(self, namespace, **kwargs):
             self.kwargs = kwargs
 
@@ -25,7 +25,7 @@ def wrap_global(func):
             kwargs = patch_options(kwargs.pop('options'), kwargs)
             return func(*args, **kwargs)
 
-    return keep_args_instance
+    return KeepArgsCls
 
 
 # https://docs.python.org/3/library/importlib.html#implementing-lazy-imports

@@ -10,7 +10,7 @@ from .options import Option
 class SxmlLoader(yaml.SafeLoader):
     def construct_mapping(self, node, deep=False):
         mapping = []
-        for key_node, value_node in node.value:
+        for key_node, _value_node in node.value:
             key = self.construct_object(key_node, deep=deep)
             if key in mapping:
                 raise ValueError(f'duplicated keys not allowed: {key}')

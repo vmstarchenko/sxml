@@ -27,9 +27,8 @@ def register(name: str) -> Callable[[type], type]:
 
 
 class BaseQuery(ABC):
-    @abstractmethod
     def __init__(self, query: str) -> None:
-        pass
+        self.query = query
 
     @abstractmethod
     def apply(self, data):
@@ -38,9 +37,6 @@ class BaseQuery(ABC):
 
 @register('xpath')
 class XPathQuery(BaseQuery):
-    def __init__(self, query: str) -> None:
-        self.query = query
-
     def apply(self, data):
         return (
             str(elt) if isinstance(elt, str) else elt
@@ -57,7 +53,7 @@ class CssQuery(XPathQuery):
 @register('jpath')
 class JPathQuery(BaseQuery):
     def __init__(self, query: str) -> None:
-        self.query = jsonpath_ng.parse(query)
+        super().__init__(jsonpath_ng.parse(query))
 
     def apply(self, data):
         return (x.value for x in self.query.find(data))
@@ -67,9 +63,10 @@ class JPathQuery(BaseQuery):
 class ConstQuery(BaseQuery):
     def __init__(self, query: str) -> None:
         try:
-            self.query = json.loads(query)
+            query = json.loads(query)
         except json.decoder.JSONDecodeError:
-            self.query = query
+            pass
+        super().__init__(query)
 
     def apply(self, data):
         return [self.query]

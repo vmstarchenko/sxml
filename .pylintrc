@@ -1,0 +1,7 @@
+[MASTER]
+ignore=tests
+disable=
+  missing-module-docstring,missing-class-docstring,missing-function-docstring,
+  too-few-public-methods,fixme,too-many-ancestors,
+  unused-argument
+good-names=i,q

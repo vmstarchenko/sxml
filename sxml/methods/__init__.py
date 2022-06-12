@@ -2,8 +2,9 @@ import re
 import json
 from typing import Any, Union, Optional
 import datetime
-from lxml import etree
 import copy
+
+from lxml import etree
 
 from sxml.utils import wrap_global, lazy_import
 
@@ -48,7 +49,7 @@ class ReMatch:
     def __call__(self, data, *, options):
         match = self.get_func()(data)
         if match is None:
-            return
+            return None
         if self.group is None:
             return match.groupdict()
         return match.group(self.group)
@@ -62,7 +63,7 @@ class ReSearch(ReMatch):
 def datetime_strftime(
     data: datetime.datetime,
     *,
-    format: str = '%Y-%m-%dT%H:%M:%S'
+    format: str = '%Y-%m-%dT%H:%M:%S',  # pylint: disable=redefined-builtin
 ) -> str:
     return data.strftime(format)
 
