@@ -1,6 +1,6 @@
 [project]
 name = "sxml"
-version = "0.1.6"
+version = "0.1.7"
 description = "Simple lxml pipeline"
 keywords = ['lxml']
 classifiers = [
@@ -58,10 +58,10 @@ requires = ["setuptools>=42.0", "wheel"]
 #     sxml = sxml.__main__:main
 
 [tool.setuptools.packages.find]
-# where = ["src"]  # ["."] by default
-include = ["sxml*"]  # ["*"] by default
-# exclude = ["mypackage.tests*"]  # empty 
+include = ["sxml*"]
 
+[tool.setuptools.package-data]
+sxml = ["py.typed"]
 
 [tool.coverage.run]
 branch = true
