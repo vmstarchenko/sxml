@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 from pathlib import Path
 from abc import abstractmethod, ABC
 
@@ -89,7 +89,7 @@ class HtmlPipeline(Chain):
         return super().__call__(data, options=options or {})
 
     @classmethod
-    def from_file(cls, path: str, *args, **kwargs) -> 'HtmlPipeline':
+    def from_file(cls, path: Union[str, Path], *args, **kwargs) -> 'HtmlPipeline':
         return cls.from_string(Path(path).read_text(*args, **kwargs))
 
     @classmethod
