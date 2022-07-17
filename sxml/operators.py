@@ -1,3 +1,4 @@
+import json
 from typing import Any, Union
 from pathlib import Path
 from abc import abstractmethod, ABC
@@ -61,6 +62,10 @@ class Apply(Operator):
         super().__init__(config, namespace)
         self.namespace = namespace
         name = config.pop('$apply')
+        if '|' in name:
+            name, args = name.split('|', 1)
+            config.update(json.loads(args))
+
         self.func = self.namespace[name](namespace=self.namespace, **config)
 
     def __call__(self, data, *, options):
@@ -71,7 +76,12 @@ class Map(Operator):
     def __init__(self, config: Config, namespace: Namespace) -> None:
         super().__init__(config, namespace)
         self.namespace = namespace
+
         name = config.pop('$map')
+        if '|' in name:
+            name, args = name.split('|', 1)
+            config.update(json.loads(args))
+
         self.func = self.namespace[name](namespace=self.namespace, **config)
 
     def __call__(self, data, *, options):
