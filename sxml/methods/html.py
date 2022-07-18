@@ -196,16 +196,18 @@ class Find:
     def _find_attr(
         self, tree: htree.Element, attr: dict, options
     ) -> Union[list[Any], Optional[Any]]:
-
         chain = attr['chain']
-        elts = attr['query'].apply(tree)
+        if tree is not None:
+            elts = attr['query'].apply(tree)
 
-        res: Union[list[Any], Optional[Any]]
-        if attr['many']:
-            res = list(elts)
-            # values = list(filter(None, (sub_attrs(v, options=options) for v in values)))
+            res: Union[list[Any], Optional[Any]]
+            if attr['many']:
+                res = list(elts)
+                # values = list(filter(None, (sub_attrs(v, options=options) for v in values)))
+            else:
+                res = next(iter(elts), None) if elts else None
         else:
-            res = next(iter(elts), None) if elts else None
+            res = None
 
         if chain:
             res = chain(res, options=options)
