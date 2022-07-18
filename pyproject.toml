@@ -1,6 +1,6 @@
 [project]
 name = "sxml"
-version = "0.1.9"
+version = "0.1.10"
 description = "Simple lxml pipeline"
 keywords = ['lxml']
 classifiers = [

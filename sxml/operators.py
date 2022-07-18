@@ -69,10 +69,10 @@ class Apply(Operator):
         self.func = self.namespace[self.name](namespace=self.namespace, **config)
 
     def __str__(self):
-        return f'<{type(self).__name__}: {self.name}>'
+        return f'<{type(self).__name__}: {self.name!r}>'
 
     def __repr__(self):
-        return f'<{type(self).__name__}: {self.name} at 0x{id(self):x}>'
+        return f'<{type(self).__name__}: {self.name!r} at 0x{id(self):x}>'
 
     def __call__(self, data, *, options):
         return self.func(data, options=options)
@@ -91,10 +91,10 @@ class Map(Operator):
         self.func = self.namespace[self.name](namespace=self.namespace, **config)
 
     def __str__(self):
-        return f'<{type(self).__name__}: {self.name}>'
+        return f'<{type(self).__name__}: {self.name!r}>'
 
     def __repr__(self):
-        return f'<{type(self).__name__}: {self.name} at 0x{id(self):x}>'
+        return f'<{type(self).__name__}: {self.name!r} at 0x{id(self):x}>'
 
     def __call__(self, data, *, options):
         return [self.func(item, options=options) for item in data]

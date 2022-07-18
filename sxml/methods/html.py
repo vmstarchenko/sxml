@@ -92,6 +92,9 @@ class Remove:
         self.query = Query(query)
 
     def __call__(self, data, *, options):
+        if data is None:
+            return None
+
         for query in self.query:
             for node in query.apply(data):
                 if not self.remove_node(node):
