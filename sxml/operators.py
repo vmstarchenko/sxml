@@ -61,12 +61,18 @@ class Apply(Operator):
     def __init__(self, config: Config, namespace: Namespace) -> None:
         super().__init__(config, namespace)
         self.namespace = namespace
-        name = config.pop('$apply')
-        if '|' in name:
-            name, args = name.split('|', 1)
+        self.name = config.pop('$apply')
+        if '|' in self.name:
+            self.name, args = self.name.split('|', 1)
             config.update(json.loads(args))
 
-        self.func = self.namespace[name](namespace=self.namespace, **config)
+        self.func = self.namespace[self.name](namespace=self.namespace, **config)
+
+    def __str__(self):
+        return f'<{type(self).__name__}: {self.name}>'
+
+    def __repr__(self):
+        return f'<{type(self).__name__}: {self.name} at 0x{id(self):x}>'
 
     def __call__(self, data, *, options):
         return self.func(data, options=options)
@@ -77,12 +83,18 @@ class Map(Operator):
         super().__init__(config, namespace)
         self.namespace = namespace
 
-        name = config.pop('$map')
-        if '|' in name:
-            name, args = name.split('|', 1)
+        self.name = config.pop('$map')
+        if '|' in self.name:
+            self.name, args = self.name.split('|', 1)
             config.update(json.loads(args))
 
-        self.func = self.namespace[name](namespace=self.namespace, **config)
+        self.func = self.namespace[self.name](namespace=self.namespace, **config)
+
+    def __str__(self):
+        return f'<{type(self).__name__}: {self.name}>'
+
+    def __repr__(self):
+        return f'<{type(self).__name__}: {self.name} at 0x{id(self):x}>'
 
     def __call__(self, data, *, options):
         return [self.func(item, options=options) for item in data]

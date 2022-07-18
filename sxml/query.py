@@ -30,6 +30,12 @@ class BaseQuery(ABC):
     def __init__(self, query: str) -> None:
         self.query = query
 
+    def __str__(self):
+        return f'<{type(self).__name__}: {self.query}>'
+
+    def __repr__(self):
+        return f'<{type(self).__name__}: {self.query} at 0x{id(self):x}>'
+
     @abstractmethod
     def apply(self, data):
         pass
