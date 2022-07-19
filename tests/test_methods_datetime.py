@@ -1,7 +1,6 @@
 import datetime
 import textwrap
 import sxml
-import pytest
 from freezegun import freeze_time
 
 UTC = datetime.timezone.utc

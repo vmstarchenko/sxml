@@ -1,0 +1,48 @@
+$chain:
+  - $apply: html.loads
+    url: !Opt url
+  - $apply: sxml.find
+    attrs:
+      - name: content
+        query: .mw-parser-output
+        $chain:
+          - $apply: html.remove
+            query: style,sup
+          - $apply: html.split
+            query: h2
+          - $map: sxml.find
+            attrs:
+              - name: header
+                query: h2 .mw-headline
+                $apply: html.dumps
+              - name: sections
+                $chain:
+                  - $apply: html.split
+                    query: h3
+                    # - $apply: html.dumps
+                    # raw: true
+                attrs:
+                  - name: pronunciation
+                    # query: split_item:has(.mw-headline:contains('Pronunciation'))
+                    query: 'xpath|.//split_item[count(.//*[contains(concat(" ",normalize-space(@class)," ")," mw-headline ")][contains(normalize-space(),"Pronunciation")]) > 0]'
+                    $apply: >
+                      html.remove|{"query": "xpath|.//li[not(self::node()[count(.//audio) > 0]|.//*[contains(normalize-space(),'IPA')])]"}
+                    attrs:
+                      - name: lines
+                        query: xpath|./ul[not(./li/ul)]|./ul/li/ul
+                        many: true
+                        # $chain:
+                        #   - $map: 'html.dumps|{"raw": false}'
+                        attrs:
+                          - name: audios
+                            query: audio source[data-transcodekey=mp3]
+                            many: true
+                            $map: 'html.get_attr|{"name": "src"}'
+                          - name: pretext
+                            query: xpath|./preceding-sibling::text()
+                          - name: text
+                            query: li
+                            many: true
+                            $chain:
+                              - $map: 'html.remove|{"query": "table"}'
+                              - $map: 'html.dumps|{"raw": false}'

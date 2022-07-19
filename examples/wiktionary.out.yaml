@@ -1,0 +1,20 @@
+content:
+-   header: English
+    sections:
+        pronunciation:
+            lines:
+            -   audios:
+                - https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5c/En-us-head.ogg/En-us-head.ogg.mp3
+                - https://upload.wikimedia.org/wikipedia/commons/transcoded/9/96/En-uk-head.ogg/En-uk-head.ogg.mp3
+                - https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5a/LL-Q1860_%28eng%29-Back_ache-head.wav/LL-Q1860_%28eng%29-Back_ache-head.wav.mp3
+                pretext: '
+
+                    '
+                text:
+                - 'enPR: hĕd, IPA: /hɛd/'
+                - ''
+                - ''
+                - ''
+-   header: Estonian
+    sections:
+        pronunciation: null

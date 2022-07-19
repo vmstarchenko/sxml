@@ -40,7 +40,7 @@ def test_loads():
 
 def test_loads_dup_keys():
     with pytest.raises(ValueError):
-        parse = sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
+        sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
             $chain:
               - $apply: html.loads
                 $apply: html.dumps
@@ -62,7 +62,6 @@ def test_loads_input_params():
     assert parse('<div><a href="/ok_url">text</a></div>', options={
         'url': 'http://localhost',
     }) == {'link': 'http://localhost/ok_url'}
-
 
     with pytest.raises(KeyError):
         assert parse('<div><a href="/missed_url">text</a></div>') == {'link': '/missed_url'}
@@ -86,10 +85,9 @@ def test_loads_input_params():
     ''')) == {'link': 'http://localhost/base_url'}
 
 
-
 def test_dumps():
     data = r'''<body> <h1>title</h1> content1 <div>hello  world</div></body>'''
-    options={
+    options = {
         'url': 'http://localhost'
     }
 
@@ -114,7 +112,9 @@ def test_dumps():
           - $apply: html.dumps
             raw: true
     '''))
-    assert parse(data, options=options) == '<div> <h1>title</h1> content1 <div>hello  world</div></div>'
+    assert parse(data, options=options) == (
+        '<div> <h1>title</h1> content1 <div>hello  world</div></div>'
+    )
 
 
 def test_re_match():
@@ -138,7 +138,7 @@ def test_re_match():
           - $apply: re.match
             pattern: some (?P<value>oops)
     '''))
-    assert parse("some string") == None
+    assert parse("some string") is None
 
 
 def test_remove():
@@ -197,7 +197,7 @@ def test_split():
                   - $apply: html.split
                     query: h1,h2
                     as_list: true
-                    drop_first: 0
+                    slice: [0, null]
                   - $map: html.dumps
     '''))
     assert parse(html, options={'url': 'http://localhost'}) == {
@@ -237,8 +237,7 @@ def test_split():
                   - $apply: html.split
                     query: h1,h2
                     as_list: true
-                    drop_first: 0
-                    drop_last: 1
+                    slice: [0, -1]
                   - $map: html.dumps
     '''))
     assert parse(html, options={'url': 'http://localhost'}) == {
@@ -246,7 +245,6 @@ def test_split():
             'title1 content1 text'
         ]
     }
-
 
     parse = sxml.HtmlPipeline.from_string(textwrap.dedent(r'''
         $chain:
@@ -258,7 +256,7 @@ def test_split():
                 $chain:
                   - $apply: html.split
                     query: h1,h2
-                    drop_first: 0
+                    slice: [0, null]
                   - $apply: html.dumps
                     raw: true
     '''))
@@ -357,4 +355,3 @@ def test_html_extract_metadata():
     ) == {
         'json-ld': [jld]
     }
-

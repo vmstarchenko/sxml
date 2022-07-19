@@ -1,5 +1,6 @@
+# flake8: noqa: F501
+
 import yaml
-import textwrap
 import sxml.cli
 import json
 import pytest
@@ -41,6 +42,7 @@ def test_simple(tmp_path):
 
 
 # sxml -p ./examples/wordnet.yaml -i ./examples/wordnet.html -o ./examples/wordnet.out.yaml -e '{"url": "http://wordnetweb.princeton.edu/perl/webwn?s=royal"}' -SUN 4
+# python -m sxml -p ./examples/wiktionary.yaml -i ./examples/wiktionary.html -o ./examples/wiktionary.out.yaml -e '{"url": "https://en.wiktionary.org/wiki/head"}' -SUN 4
 # sxml -p ./examples/python_releases.yaml -i ./examples/python_releases.html -o ./examples/python_releases.out.yaml -e '{"url": "https://www.python.org/downloads/source/"}' -SUN 4
 # sxml -p ./examples/pypi.yaml -i ./examples/pypi.html -o ./examples/pypi.out.yaml -e '{"url": "https://pypi.org/project/lxml/"}' -SUN 4
 
@@ -48,6 +50,10 @@ EXAMPLES_OPTIONS = {
     'python_releases': [
         '-SUN', '4',
         '-e', json.dumps({"url": "https://www.python.org/downloads/source/"}),
+    ],
+    'wiktionary': [
+        '-SUN', '4',
+        '-e', json.dumps({"url": "https://en.wiktionary.org/wiki/head"}),
     ],
     'wordnet': [
         '-SUN', '4',
@@ -61,6 +67,7 @@ EXAMPLES_OPTIONS = {
 
 @pytest.mark.parametrize("name", [
     'python_releases',
+    'wiktionary',
     'wordnet',
     'pypi',
 ])

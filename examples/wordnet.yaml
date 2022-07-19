@@ -11,7 +11,7 @@ $chain:
               - 'xpath|.//a[contains(@class, "pos")]/preceding-sibling::*'
               - 'xpath|.//a[contains(@class, "pos")]'
           - $apply: html.split
-            drop_first: 0
+            slice: [0, null]
             query: h3
             as_list: true
           - $map: sxml.find

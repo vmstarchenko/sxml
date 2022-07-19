@@ -1,6 +1,5 @@
 import textwrap
 import sxml
-import pytest
 
 
 def test_simple():

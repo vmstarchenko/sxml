@@ -117,12 +117,16 @@ class Remove:
 
 
 class Split:
-    def __init__(self, query, namespace, *, as_list=False, drop_first=1, drop_last=0):
+    def __init__(
+            self, query, namespace, *,
+            as_list=False, slice=(1, None)
+            ):  # pylint: disable=redefined-builtin
         self.namespace = namespace
         self.query = Query(query)
         self.as_list = as_list
-        self.drop_first = drop_first
-        self.drop_last = drop_last
+        self.slice = tuple(slice)
+        assert self.slice is None or len(self.slice) <= 3, \
+            f'Invalid slice argument, found {self.slice!r}'
 
     def __call__(self, data, *, options):
         nodes = set(self.query.apply(data))
@@ -143,10 +147,8 @@ class Split:
         if (cur_node.text and cur_node.text.strip()) or list(cur_node):
             res.append(cur_node)
 
-        if self.drop_first:
-            res = res[self.drop_first:]
-        if res and self.drop_last:
-            res = res[:-self.drop_last]
+        if self.slice:
+            res = res[slice(*self.slice)]
 
         if self.as_list:
             return res
@@ -187,7 +189,10 @@ class Find:
             if attr:
                 raise ValueError(f'unkonwn options for attr {attr}')
 
-    def __call__(self, data: htree.Element, *, options) -> dict[str, Any]:
+    def __call__(self, data: htree.Element, *, options) -> dict[str, Any] | None:
+        if data is None:
+            return None
+
         return {
             attr['name']: self._find_attr(data, attr, options)
             for attr in self.attrs
