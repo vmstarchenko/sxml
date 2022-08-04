@@ -30,3 +30,4 @@
   - https://stackoverflow.com/questions/4210730/how-do-i-use-xml-namespaces-with-find-findall-in-lxml
 * add function for xml to json
 * add test for base_url resolve <a href="tel:+79999999999">tel</a>
+* add test for wiktionary: hello and punctuation

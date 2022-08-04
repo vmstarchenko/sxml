@@ -35,6 +35,8 @@ def prettify_scripts(html: str) -> str:
 
 
 def prettify_html(html: str) -> str:
+    if bs4 is None:
+        return html  # TODO: use simple lxml prettify
     return next(bs4.BeautifulSoup(html, 'lxml').body.children).prettify()
 
 
