@@ -31,3 +31,4 @@
 * add function for xml to json
 * add test for base_url resolve <a href="tel:+79999999999">tel</a>
 * add test for wiktionary: hello and punctuation
+* in html debug mode display selector candidates by click on element, highligh elements by click on selector

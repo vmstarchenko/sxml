@@ -1,0 +1,46 @@
+body {
+    margin: 0px;
+    font-family: consolas, monospace;
+    font-style: normal;
+    font-weight: bold;
+}
+
+/* color theme */
+*[type=key] { color: brown; }
+*[type=str] { color: darkgreen; }
+*[type=NoneType] { color: purple; }
+*[type=html] summary { padding-left: 1em; background: yellow; }
+*[type=brace] { font-weight: bolder; }
+*[type=brace][level="0"] { color: black; }
+*[type=brace][level="1"] { color: red; }
+*[type=brace][level="2"] { color: green; }
+*[type=brace][level="3"] { color: cyan; }
+*[type=brace][level="4"] { color: orange; }
+*[type=brace][level="5"] { color: brown; }
+*[type=brace][level="6"] { color: lightgreen; }
+*[type=brace][level="7"] { color: blue; }
+*[type=brace][level="8"] { color: #FF00FF; }
+*[type=brace][level="9"] { color: purple; }
+#sxml_data_root { background: #F5F5F5; }
+
+#sxml_info_root {
+    padding: 5px;
+    background: #FFFDD0;
+    border: 1px solid black;
+}
+
+.sxml_tag {
+    background: #F5F5F5;
+    border: 1px solid black;
+    display: inline-block;
+    margin: 2.5px;
+    padding: 2.5px;
+    cursor: pointer;
+}
+
+.sxml_tag.tag { background: #98FB98; }
+.sxml_tag.id { background: #ff704d; }
+.sxml_tag.class { background: #ffd699; }
+.sxml_tag.attr { background: #66ffff; }
+
+.sxml_tag.sxml_active { background: #DCDCDC; }

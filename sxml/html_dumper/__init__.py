@@ -8,24 +8,12 @@ import lxml.etree
 
 
 class HtmlDumper:
-    STYLE = '''
-    body { background: #F5F5F5; font-family: consolas, monospace; font-style: normal; font-weight: bold }
-    *[type=key] { color: brown; }
-    *[type=str] { color: darkgreen; }
-    *[type=NoneType] { color: purple; }
-    *[type=html] summary { padding-left: 1em; background: yellow; }
-    *[type=brace] { font-weight: bolder }
-    *[type=brace][level="0"] { color: black }
-    *[type=brace][level="1"] { color: red }
-    *[type=brace][level="2"] { color: green }
-    *[type=brace][level="3"] { color: cyan }
-    *[type=brace][level="4"] { color: orange }
-    *[type=brace][level="5"] { color: brown }
-    *[type=brace][level="6"] { color: lightgreen }
-    *[type=brace][level="7"] { color: blue }
-    *[type=brace][level="8"] { color: #FF00FF }
-    *[type=brace][level="9"] { color: purple }
-    '''
+    HEADER = '<!DOCTYPE html>'
+    STYLE = pathlib.Path(__file__).with_name('style.css').read_text()
+    SCRIPT = pathlib.Path(__file__).with_name('script.js').read_text()
+    CHILD_STYLE = pathlib.Path(__file__).with_name('child_style.css').read_text()
+    CHILD_SCRIPT = pathlib.Path(__file__).with_name('child_script.js').read_text()
+
     def __init__(self, indent=None, allow_unicode=False, sort_keys=False, output=None, **kwargs):
         self.indent = indent
         self.allow_unicode = allow_unicode
@@ -45,8 +33,12 @@ class HtmlDumper:
 
     def convert(self, data):
         return self._node([
-            self._node(text=self.STYLE, tag='style'),
-            self._node(self._to_html(data), 'body'),
+            self._node([
+                self._node(text=self.STYLE, tag='style'),
+                self._node(text=self.SCRIPT, tag='script', attrs={'defer': ''}),
+            ], tag='head'),
+            self._node(
+                [self._node(self._to_html(data), attrs={'id': 'sxml_data_root'})], 'body'),
         ], tag='html')
 
     def _node(self, children=None, tag='div', attrs=None, text=None, tail=None):
@@ -114,7 +106,13 @@ class HtmlDumper:
         if isinstance(data, lxml.etree.ElementBase):
             data_path = self.get_data_path()
             with open(data_path, 'w', encoding='utf-8') as f:
-                f.write(lxml.html.tostring(data, pretty_print=True, encoding='unicode'))
+                f.write(self.HEADER)
+                f.write('<html><head>')
+                f.write(self._dump_html(self._node(text=self.CHILD_SCRIPT, tag='script', attrs={'defer': ''}))),
+                f.write(self._dump_html(self._node(text=self.CHILD_STYLE, tag='style'))),
+                f.write('</head><body>')
+                f.write(self._dump_html(data))
+                f.write('</body></html>')
             return [self._node(
                 [
                     self._node(self.add_comma(add_comma), text=repr(data), tag='summary'),
@@ -124,7 +122,7 @@ class HtmlDumper:
                     }),
                 ],
                 tag='details',
-                attrs={'indent': 1, 'type': 'html'},
+                attrs={'indent': 1, 'type': 'html', 'open': ''},
             )]
 
         return [
@@ -133,4 +131,7 @@ class HtmlDumper:
         ]
 
     def dump(self, data):
-        return lxml.html.tostring(self.convert(data), pretty_print=True, encoding='unicode')
+        return self.HEADER + self._dump_html(self.convert(data))
+
+    def _dump_html(self, data):
+        return lxml.html.tostring(data, pretty_print=True, encoding='unicode')
