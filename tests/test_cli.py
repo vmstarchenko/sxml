@@ -1,10 +1,12 @@
 # flake8: noqa: F501
 
+import lxml.html
 import yaml
 import sxml.cli
 import json
 import pytest
 from pathlib import Path
+
 
 SIMPLE_CONFIG = r'''
 $chain:
@@ -25,7 +27,7 @@ def test_simple(tmp_path):
     inp_path = tmp_path / 'inp.html'
     inp_path.write_text('<h1>hello</h1>')
 
-    out_path = tmp_path / 'out.html'
+    out_path = tmp_path / 'out.yaml'
 
     args = sxml.cli.parse_args([
         '-p', str(config_path),
@@ -42,7 +44,7 @@ def test_simple(tmp_path):
 
 
 # sxml -p ./examples/wordnet.yaml -i ./examples/wordnet.html -o ./examples/wordnet.out.yaml -e '{"url": "http://wordnetweb.princeton.edu/perl/webwn?s=royal"}' -SUN 4
-# python -m sxml -p ./examples/wiktionary.yaml -i ./examples/wiktionary.html -o ./examples/wiktionary.out.yaml -e '{"url": "https://en.wiktionary.org/wiki/head"}' -SUN 4
+# sxml -p ./examples/wiktionary.yaml -i ./examples/wiktionary.html -o ./examples/wiktionary.out.yaml -e '{"url": "https://en.wiktionary.org/wiki/head"}' -SUN 4
 # sxml -p ./examples/python_releases.yaml -i ./examples/python_releases.html -o ./examples/python_releases.out.yaml -e '{"url": "https://www.python.org/downloads/source/"}' -SUN 4
 # sxml -p ./examples/pypi.yaml -i ./examples/pypi.html -o ./examples/pypi.out.yaml -e '{"url": "https://pypi.org/project/lxml/"}' -SUN 4
 
@@ -76,7 +78,7 @@ def test_examples(name, tmp_path):
     config_path = examples_path / f'{name}.yaml'
     inp_path = examples_path / f'{name}.html'
 
-    out_path = tmp_path / 'out.html'
+    out_path = tmp_path / 'out.yaml'
     args = sxml.cli.parse_args([
         '-p', str(config_path),
         '-i', str(inp_path),
@@ -87,3 +89,45 @@ def test_examples(name, tmp_path):
     sxml.cli.main(args)
 
     assert out_path.read_text() == (examples_path / f'{name}.out.yaml').read_text()
+
+
+HTML_CONFIG = r'''
+$chain:
+  - $apply: html.loads
+  - $apply: sxml.find
+    attrs:
+      - name: title
+        query: h1
+        $chain:
+          - $apply: html.dumps
+      - name: body
+        query: body
+'''
+
+
+def test_simple_html_dumper(tmp_path):
+    config_path = tmp_path / 'simple_config.yaml'
+    config_path.write_text(HTML_CONFIG)
+
+    inp_path = tmp_path / 'inp.html'
+    inp_path.write_text('<body><h1>hello</h1></body>')
+
+    out_path = tmp_path / 'out.html'
+
+    args = sxml.cli.parse_args([
+        '-p', str(config_path),
+        '-i', str(inp_path),
+        '-o', str(out_path),
+    ])
+
+    sxml.cli.main(args)
+
+    assert lxml.html.tostring(
+        lxml.html.fromstring(out_path.read_text()).xpath('.//body')[0]
+    ) == (
+       b'<body>\n<span level="0" type="brace">{</span><div type="dict"><div indent'                                                                                           
+       b'="1">\n<div>\n<span type="key">"title"</span> : <span type="str">"hello"</' 
+       b'span><span>,</span>\n</div>\n<div>\n<span type="key">"body"</span> : <span '                                                                                         
+       b'type="NoneType">null</span>\n</div>\n</div></div>\n<span level="0" type="br'
+       b'ace">}</span>\n</body>\n'
+    )

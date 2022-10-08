@@ -1,6 +1,5 @@
 import re
 import importlib.util
-import sys
 from .options import Option
 
 
@@ -30,6 +29,10 @@ def wrap_global(func):
 
 # https://docs.python.org/3/library/importlib.html#implementing-lazy-imports
 def lazy_import(name):
+    '''
+    TODO: add lazy import
+
+    # method 1
     spec = importlib.util.find_spec(name)
     if spec is None:
         return None
@@ -40,3 +43,18 @@ def lazy_import(name):
     sys.modules[name] = module
     loader.exec_module(module)
     return module
+
+    # method 2
+    try:
+        return sys.modules[name]
+    except KeyError:
+        pass
+
+    spec = importlib.util.find_spec(name)
+    module = importlib.util.module_from_spec(spec)
+    loader = importlib.util.LazyLoader(spec.loader)
+    loader.exec_module(module)
+    return module
+    '''
+
+    return importlib.import_module(name)

@@ -53,9 +53,8 @@ requires = ["setuptools>=42.0", "wheel"]
 # zip_safe=true
 # include_package_data=True
 
-# [project.entry_points]
-# console_scripts =
-#     sxml = sxml.__main__:main
+[project.scripts]
+sxml = "sxml.__main__:main"
 
 [tool.setuptools.packages.find]
 include = ["sxml*"]
@@ -90,13 +89,13 @@ filterwarnings = [
     "ignore:The localize method is no longer necessary, as this time zone supports the fold attribute",
 ]
 addopts = [
-    "--flake8",
+    # "--flake8",
     "--pylint",
     "--mypy",
     # "-n", "4",
-    # "-vv",
+    "-vv",
     "--cov=sxml", "--cov-report=xml", "--no-cov-on-fail",
-    # "-k", "test_split",
+    # "-k", "test_cli",
     # "-r", "A",
 ]
 testpaths = [

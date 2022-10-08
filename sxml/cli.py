@@ -6,15 +6,21 @@ import sys
 import sxml
 from sxml import yaml_helpers
 
-FORMATS = ['json', 'yaml']
+from .html_dumper import HtmlDumper
+
+FORMATS = ['json', 'yaml', 'html']
+
 
 DUMPERS = {
     'json': lambda *args, allow_unicode=False, indent=None, sort_keys=False, **kwargs: json.dumps(
         *args, ensure_ascii=not allow_unicode, indent=indent, sort_keys=sort_keys,
     ),
-    'yaml': yaml_helpers.dump,
+    'yaml': lambda data, *args, allow_unicode=False, indent=None, sort_keys=False, **kwargs: \
+            yaml_helpers.dump(
+                data, allow_unicode=allow_unicode, indent=indent, sort_keys=sort_keys
+            ),
+    'html': lambda data, *args, **kwargs: HtmlDumper(*args, **kwargs).dump(data),
 }
-
 
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Convert json to json.')
@@ -74,6 +80,7 @@ def main(args):
         allow_unicode=args.allow_unicode,
         sort_keys=args.sort_keys,
         Dumper=Dumper,
+        output=args.output,
     )
 
     if args.output is None:

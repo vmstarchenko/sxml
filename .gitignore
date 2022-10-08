@@ -1,3 +1,8 @@
+
+.bash_history
+.bashrc
+.local
+.python_history
 tmp/
 
 # Byte-compiled / optimized / DLL files
